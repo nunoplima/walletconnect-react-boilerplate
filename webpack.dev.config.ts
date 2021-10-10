@@ -3,6 +3,8 @@ import { Configuration, HotModuleReplacementPlugin } from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import ESLintPlugin from 'eslint-webpack-plugin'
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+import webpack from 'webpack'
 
 const config: Configuration = {
   mode: 'development',
@@ -30,6 +32,19 @@ const config: Configuration = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    fallback: {
+      'crypto': false,
+      'stream': require.resolve('stream-browserify'),
+      'assert': false,
+      'http': false,
+      'https': false,
+      'os': false,
+    },
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: './tsconfig.json',
+      }),
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -41,6 +56,13 @@ const config: Configuration = {
     }),
     new ESLintPlugin({
       extensions: ['js', 'jsx', 'ts', 'tsx'],
+      quiet: true,
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
     }),
   ],
   devtool: 'inline-source-map',
