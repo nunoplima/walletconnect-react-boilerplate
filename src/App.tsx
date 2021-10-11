@@ -6,17 +6,25 @@ import React, {
 } from 'react'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import Web3 from 'web3'
+import { AbiItem } from 'web3-utils'
+import { Contract } from 'web3-eth-contract'
 import { provider as Provider } from 'web3-core'
 import { useLocalStorage } from '@hooks/useLocalStorage'
 import { useIsMounted } from '@/hooks/useIsMounted'
+import Loot from '@/abis/Loot.json'
 
 const provider = new WalletConnectProvider({
-  rpc: { 5: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161' },
+  rpc: {
+    1: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
+    5: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+  },
 })
 
 const App = () => {
   const isMounted = useIsMounted()
   const [account, setAccount] = useState<string | null>(null)
+  const [lootContract, setLootContract] = useState<Contract | null>(null)
+  const [lootBalance, setLootBalance] = useState(0)
   const [cashedWalletConnectProvider] = useLocalStorage('walletconnect')
 
   const events = useMemo(() => (
@@ -48,12 +56,35 @@ const App = () => {
     setAccount(account)
   }, [])
 
+  const loadLootContract = useCallback(async () => {
+    const web3 = new Web3(provider as unknown as Provider)
+    const networdId = await web3.eth.net.getId()
+
+    if (networdId === 1) {
+      const lootContractAddress = '0xff9c1b15b16263c61d017ee9f65c50e4ae0113d7'
+      const loot = new web3.eth.Contract(Loot.abi as AbiItem[], lootContractAddress)
+      setLootContract(loot)
+    } else {
+      alert('Contract not deployed on the current network')
+    }
+  }, [])
+
   const connect = useCallback(async () => {
     loadProvider()
     loadAccount()
     addEventListeners()
-  }, [addEventListeners, loadAccount, loadProvider])
+    loadLootContract()
+  }, [
+    addEventListeners,
+    loadAccount,
+    loadLootContract,
+    loadProvider,
+  ])
 
+  const getLootBalance = useCallback(async () => {
+    const balance = await lootContract?.methods.balanceOf(account).call()
+    setLootBalance(balance)
+  }, [account, lootContract?.methods])
 
   useEffect(() => {
     if (!isMounted && cashedWalletConnectProvider.connected) {
@@ -67,6 +98,10 @@ const App = () => {
     isMounted,
     addEventListeners,
   ])
+
+  useEffect(() => {
+    if (lootContract && account) getLootBalance()
+  }, [account, lootContract, getLootBalance])
 
   useEffect(() => {
     return () => {
@@ -84,6 +119,7 @@ const App = () => {
         <>
           <h1>Connected: {account}</h1>
           <button onClick={handleDisconnect}>Disconnect</button>
+          <p>You have {lootBalance} Loot(s)</p>
         </>
       ) : (
         <>

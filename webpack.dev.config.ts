@@ -4,6 +4,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import ESLintPlugin from 'eslint-webpack-plugin'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+import Dotenv from 'dotenv-webpack'
 import webpack from 'webpack'
 
 const config: Configuration = {
@@ -64,6 +65,7 @@ const config: Configuration = {
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),
+    new Dotenv(),
   ],
   devtool: 'inline-source-map',
   devServer: {

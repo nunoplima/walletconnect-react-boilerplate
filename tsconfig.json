@@ -24,6 +24,9 @@
       "@hooks/*": [
         "src/hooks/*"
       ],
+      "@abis/*": [
+        "src/abis/*"
+      ],
       "@/*": [
         "src/*"
       ]
