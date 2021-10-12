@@ -24,6 +24,9 @@
       "@hooks/*": [
         "src/hooks/*"
       ],
+      "@contexts/*": [
+        "src/contexts/*"
+      ],
       "@abis/*": [
         "src/abis/*"
       ],
