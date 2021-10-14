@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "webpack serve --config webpack.dev.config.ts",
-    "build": "webpack --config webpack.prod.config.ts"
+    "build": "webpack --config webpack.prod.config.ts",
+    "start": "webpack-dev-server --config webpack.prod.config.ts"
   },
   "dependencies": {
     "@walletconnect/web3-provider": "^1.6.6",

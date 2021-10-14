@@ -30,10 +30,9 @@ export const LootSection: FC = () => {
   }, [web3])
 
   const getLootBalance = useCallback(async () => {
-    const address = '0x7a6a21ba4cb15ae3c40e0a567c0d01cd9ad4f72c'
-    const balance = await lootContract?.methods.balanceOf(address).call()
+    const balance = await lootContract?.methods.balanceOf(account).call()
     setLootBalance(balance)
-  }, [lootContract?.methods])
+  }, [account, lootContract?.methods])
 
   useEffect(() => {
     if (web3 && account) loadLootContract()
