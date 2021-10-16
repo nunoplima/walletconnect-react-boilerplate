@@ -35,7 +35,7 @@ const useWeb3Context = () => {
 const provider = new WalletConnectProvider({
   rpc: {
     1: `https://mainnet.infura.io/v3/${process.env.INFURA_ID}`,
-    5: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+    5: `https://goerli.infura.io/v3/${process.env.INFURA_ID}`,
   },
 })
 
@@ -46,7 +46,13 @@ const Web3ContextProvider = (props: { children: ReactNode }) => {
   const [cashedWalletConnectProvider] = useLocalStorage('walletconnect')
   const isMounted = useIsMounted()
 
-  const loadProvider = useCallback(async () => await provider.enable(), [])
+  const loadProvider = useCallback(async () => {
+    try {
+      await provider.enable()
+    } catch(error) {
+      window.location.href = '/'
+    }
+  }, [])
 
   const loadAccount = useCallback(async () => {
     const web3 = new Web3(provider as unknown as Provider)
