@@ -24,13 +24,13 @@ yarn dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 
-2. Build
+5. Build
 
 ```bash
 yarn build
 ```
 
-Check [a relative link](build)
+Check your /build folder
 
 ## Important dependencies
 
