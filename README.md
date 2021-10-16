@@ -13,7 +13,7 @@
 
    1.3. Run: `yarn`
 
-2. Ask a colleague for the environment variables
+2. Get the environment variables
 
 3. Run the development server
 
